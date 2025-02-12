@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "229909930809",
+    "project_id": "global-chat-apps",
+    "storage_bucket": "global-chat-apps.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229909930809:android:cd23811c0d8387d87e3ee8",
+        "android_client_info": {
+          "package_name": "com.wandidev.globalchat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMr_Y8Qj2hckODynobPj54T66yiqPULEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
