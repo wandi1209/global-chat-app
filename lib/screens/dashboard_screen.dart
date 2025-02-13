@@ -15,7 +15,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dashboard"),
+        title: Text("Global Chat"),
+      ),
+      drawer: Drawer(
+        child: Container(
+          child: Column(
+            children: [
+              SizedBox(height: 50),
+              ListTile(
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (context) {
+                    return SplashScreen();
+                  }), (route) {
+                    return false;
+                  });
+                },
+                leading: Icon(Icons.logout),
+                title: Text("Logout"),
+              ),
+            ],
+          ),
+        ),
       ),
       body: Column(
         children: [
