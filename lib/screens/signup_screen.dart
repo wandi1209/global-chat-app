@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:globalchat/screens/dashboard_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -11,6 +13,23 @@ class _SignupScreenState extends State<SignupScreen> {
   var userForm = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+
+  Future<void> createAccount() async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email.text, password: password.text);
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) {
+        return DashboardScreen();
+      }), (route) {
+        return false;
+      });
+    } catch (e) {
+      SnackBar messageSnackBar =
+          SnackBar(backgroundColor: Colors.red, content: Text(e.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(messageSnackBar);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +44,13 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             children: [
               TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: email,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Email is required";
                   }
+                  return null;
                 },
                 decoration: InputDecoration(
                   label: Text("Email"),
@@ -37,11 +58,13 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: 23),
               TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: password,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Password is required";
                   }
+                  return null;
                 },
                 obscureText: true,
                 enableSuggestions: false,
@@ -53,7 +76,9 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 23),
               ElevatedButton(
                   onPressed: () {
-                    if (userForm.currentState!.validate()) {}
+                    if (userForm.currentState!.validate()) {
+                      createAccount();
+                    }
                   },
                   child: Text("Create Account"))
             ],
