@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:globalchat/screens/profile_screen.dart';
 import 'package:globalchat/screens/splash_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -22,6 +23,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             children: [
               SizedBox(height: 50),
+              ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ProfileScreen();
+                  }));
+                },
+                leading: Icon(Icons.people),
+                title: Text("Profile"),
+              ),
               ListTile(
                 onTap: () async {
                   await FirebaseAuth.instance.signOut();
