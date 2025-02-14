@@ -48,7 +48,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Padding(
               padding: const EdgeInsets.all(6.0),
               child: CircleAvatar(
-                child: Text(userProvider.userName[0]),
+                child: Text(
+                  (userProvider.userName.isNotEmpty)
+                      ? userProvider.userName[0]
+                      : "?",
+                ),
               ),
             ),
           ),
@@ -66,7 +70,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }));
                   },
                   leading: CircleAvatar(
-                    child: Text(userProvider.userName[0]),
+                    child: Text(
+                      (userProvider.userName.isNotEmpty)
+                          ? userProvider.userName[0]
+                          : "?",
+                    ),
                   ),
                   title: Text(
                     userProvider.userName,
