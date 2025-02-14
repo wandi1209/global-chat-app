@@ -25,6 +25,7 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
     Map<String, dynamic> messageToSend = {
       "text": messageText.text,
       "sender_name": Provider.of<UserProvider>(context, listen: false).userName,
+      "sender_id": Provider.of<UserProvider>(context, listen: false).userId,
       "chatroom_id": widget.chatroomId,
       "timestamp": FieldValue.serverTimestamp(),
     };
@@ -32,6 +33,51 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
       await db.collection("messages").add(messageToSend);
       messageText.text = "";
     } catch (e) {}
+  }
+
+  Widget singleChatItem({
+    required String senderName,
+    required String text,
+    required String senderId,
+  }) {
+    return Column(
+      crossAxisAlignment:
+          senderId == Provider.of<UserProvider>(context, listen: false).userId
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 6, right: 6),
+          child: Text(
+            senderName,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        Container(
+            decoration: BoxDecoration(
+              color: senderId ==
+                      Provider.of<UserProvider>(context, listen: false).userId
+                  ? Colors.blueGrey[900]
+                  : Colors.grey,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                text,
+                style: TextStyle(
+                    color: senderId ==
+                            Provider.of<UserProvider>(context, listen: false)
+                                .userId
+                        ? Colors.white
+                        : Colors.black),
+              ),
+            )),
+        SizedBox(
+          height: 8,
+        )
+      ],
+    );
   }
 
   @override
@@ -55,6 +101,12 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                       return Text("Some error has occured!");
                     }
                     var allMessages = snapshot.data?.docs ?? [];
+                    if (allMessages.length < 1) {
+                      return Center(
+                        child: Text("No message here"),
+                      );
+                    }
+
                     return ListView.builder(
                         reverse: true,
                         itemCount: allMessages.length,
@@ -64,18 +116,10 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                         ) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  allMessages[index]["sender_name"],
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(allMessages[index]["text"]),
-                                SizedBox(
-                                  height: 8,
-                                )
-                              ],
+                            child: singleChatItem(
+                              senderName: allMessages[index]["sender_name"],
+                              text: allMessages[index]["text"],
+                              senderId: allMessages[index]["sender_id"],
                             ),
                           );
                         });
