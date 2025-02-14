@@ -10,6 +10,8 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   var userForm = GlobalKey<FormState>();
+  bool isLoading = false;
+
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController name = TextEditingController();
@@ -98,18 +100,29 @@ class _SignupScreenState extends State<SignupScreen> {
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.orange,
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             if (userForm.currentState!.validate()) {
-                              SignupController.createAccount(
+                              isLoading = true;
+                              setState(() {});
+                              await SignupController.createAccount(
                                 context: context,
                                 email: email.text,
                                 password: password.text,
                                 name: name.text,
                                 country: country.text,
                               );
+                              isLoading = false;
+                              setState(() {});
                             }
                           },
-                          child: Text("Create Account")),
+                          child: isLoading
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text("Create Account")),
                     ),
                   ],
                 )

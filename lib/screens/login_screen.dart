@@ -11,6 +11,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   var userForm = GlobalKey<FormState>();
+  bool isLoading = false;
+
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
@@ -69,15 +71,26 @@ class _LoginScreenState extends State<LoginScreen> {
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.orange,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (userForm.currentState!.validate()) {
-                            LoginController.login(
+                            isLoading = true;
+                            setState(() {});
+                            await LoginController.login(
                                 context: context,
                                 email: email.text,
                                 password: password.text);
+                            isLoading = false;
+                            setState(() {});
                           }
                         },
-                        child: Text("Login")),
+                        child: isLoading
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text("Login")),
                   ),
                 ],
               ),
